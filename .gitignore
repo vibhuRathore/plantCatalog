@@ -1,0 +1,7 @@
+backendUrvann/node_modules/
+backendUrvann/.env
+
+
+frontendUrvann/node_modules/
+frontendUrvann/.env
+frontendUrvann/.gitignore
