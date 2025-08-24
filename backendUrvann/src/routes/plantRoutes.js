@@ -16,7 +16,6 @@ const router = Router();
 router.get("/", getAllPlants);
 router.get("/:id", getPlantById);
 
-// CRUD for plants (admin only)
 router.post("/", protectRoute, (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied. Admins only." });
