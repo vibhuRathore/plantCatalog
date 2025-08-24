@@ -1,10 +1,16 @@
 import Plant from "../models/Plant.js";
 
-// GET all plants (no pagination, no backend search)
+// GET all plants
 export const getAllPlants = async (req, res) => {
   try {
     const plants = await Plant.find();
-    res.status(200).json({ plants });
+
+    const cleaned = plants.map(p => ({
+      ...p.toObject(),
+      rating: typeof p.rating === "number" ? p.rating : 0,
+    }));
+
+    res.status(200).json(cleaned);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch plants" });
   }
@@ -16,7 +22,11 @@ export const getPlantById = async (req, res) => {
     const plant = await Plant.findById(req.params.id)
       .populate("reviews.user", "name email");
     if (!plant) return res.status(404).json({ message: "Plant not found" });
-    res.status(200).json(plant);
+
+    res.status(200).json({
+      ...plant.toObject(),
+      rating: typeof plant.rating === "number" ? plant.rating : 0,
+    });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch plant" });
   }
@@ -25,7 +35,10 @@ export const getPlantById = async (req, res) => {
 // CREATE plant
 export const createPlant = async (req, res) => {
   try {
-    const plant = await Plant.create(req.body);
+    const plant = await Plant.create({
+      ...req.body,
+      rating: req.body.rating ?? 0, // default rating
+    });
     res.status(201).json(plant);
   } catch (err) {
     res.status(400).json({ message: "Failed to create plant" });
@@ -35,9 +48,17 @@ export const createPlant = async (req, res) => {
 // UPDATE plant
 export const updatePlant = async (req, res) => {
   try {
-    const plant = await Plant.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const plant = await Plant.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body },
+      { new: true }
+    );
     if (!plant) return res.status(404).json({ message: "Plant not found" });
-    res.status(200).json(plant);
+
+    res.status(200).json({
+      ...plant.toObject(),
+      rating: typeof plant.rating === "number" ? plant.rating : 0,
+    });
   } catch (err) {
     res.status(400).json({ message: "Failed to update plant" });
   }
@@ -75,7 +96,7 @@ export const addReview = async (req, res) => {
     plant.rating = Number((total / plant.reviews.length).toFixed(1));
 
     await plant.save();
-    res.status(201).json({ message: "Review added" });
+    res.status(201).json(plant);
   } catch (err) {
     res.status(500).json({ message: "Failed to add review" });
   }
@@ -106,7 +127,7 @@ export const updateReview = async (req, res) => {
     plant.rating = Number((total / plant.reviews.length).toFixed(1));
 
     await plant.save();
-    res.json({ message: "Review updated" });
+    res.json(plant);
   } catch (err) {
     res.status(500).json({ message: "Failed to update review" });
   }
@@ -138,7 +159,7 @@ export const deleteReview = async (req, res) => {
     }
 
     await plant.save();
-    res.json({ message: "Review deleted" });
+    res.json(plant);
   } catch (err) {
     res.status(500).json({ message: "Failed to delete review" });
   }

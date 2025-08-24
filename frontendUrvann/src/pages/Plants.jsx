@@ -36,8 +36,13 @@ export default function Plants() {
           )?.includes(t)
       );
     }
+
+    // Sorting
     if (sort === "priceAsc") r.sort((a, b) => a.price - b.price);
     if (sort === "priceDesc") r.sort((a, b) => b.price - a.price);
+    if (sort === "ratingAsc") r.sort((a, b) => (a.rating ?? 0) - (b.rating ?? 0));
+    if (sort === "ratingDesc") r.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+
     return r;
   }, [plants, q, sort]);
 
@@ -66,6 +71,8 @@ export default function Plants() {
           <option value="none">Sort</option>
           <option value="priceAsc">Price ↑</option>
           <option value="priceDesc">Price ↓</option>
+          <option value="ratingAsc">Rating ↑</option>
+          <option value="ratingDesc">Rating ↓</option>
         </select>
       </section>
 
@@ -87,7 +94,12 @@ export default function Plants() {
                 loading="lazy"
               />
               <div className="p-4">
-                <h3 className="font-semibold text-emerald-900">{p.name}</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-emerald-900">{p.name}</h3>
+                  <span className="text-emerald-700 text-sm font-medium">
+                    ⭐ {Number(p.rating ?? 0)}
+                  </span>
+                </div>
                 <p className="text-sm text-emerald-800/70">
                   {p.origin || "Unknown origin"}
                 </p>

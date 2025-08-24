@@ -6,8 +6,7 @@ const ReviewSchema = new mongoose.Schema(
     comment: { type: String, trim: true },
     stars: { type: Number, min: 1, max: 5, required: true },
     createdAt: { type: Date, default: Date.now }
-  },
-  { _id: true }
+  }
 );
 
 const PlantSchema = new mongoose.Schema(
