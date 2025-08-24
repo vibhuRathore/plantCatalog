@@ -1,3 +1,5 @@
+NOTE - IF YOU ARE NOT ABLE TO SEE ANY PLANTS ON STARTUP , PLEASE RELOAD 2 3 TIMES.
+
 🌱 GreenNest
 
 GreenNest is a full-stack developer tool designed to facilitate the creation of scalable, secure, and feature-rich plant management applications.
