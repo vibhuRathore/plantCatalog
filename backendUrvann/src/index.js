@@ -21,6 +21,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-await connectDB();
-
-export default app;
+app.listen(PORT, async () => {
+  await connectDB();
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+});
