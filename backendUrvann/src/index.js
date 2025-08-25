@@ -21,6 +21,10 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.listen(PORT, async () => {
   await connectDB();
   console.log(`✅ Server running at http://localhost:${PORT}`);
